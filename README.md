@@ -19,6 +19,7 @@ flowchart LR
     style Gold fill:#064e3b,color:#fff
 ```
 
+[View Interactive Architecture Diagram](https://apoorv098.github.io/airbnb-elt-pipeline/architecture.html)
 
 ## Tech Stack
 
