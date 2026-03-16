@@ -379,6 +379,9 @@ ORDER BY dbt_valid_from;
 
 ---
 
-## License
+## PowerBI Dashbaords
+![screenshots](screenshots/dashboard1.png)
 
-MIT
+<br><br><br><br>
+
+![screenshots](screenshots/dashboard2.png)
