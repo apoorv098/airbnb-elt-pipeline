@@ -1,0 +1,46 @@
+version: 2
+
+sources:
+  - name: bronze
+    database: BRONZE
+    schema: AIRBNB
+    tables:
+      - name: raw_listings
+        description: "Raw listings loaded via Snowpipe"
+        columns:
+          - name: listing_id
+            tests: [not_null, unique]
+          - name: host_id
+            tests: [not_null]
+          - name: price_usd
+            tests: [not_null]
+          - name: room_type
+            tests:
+              - accepted_values:
+                  values: ['Entire home', 'Private room', 'Shared room']
+
+      - name: raw_bookings
+        description: "Raw bookings loaded via Snowpipe"
+        columns:
+          - name: booking_id
+            tests: [not_null, unique]
+          - name: listing_id
+            tests: [not_null]
+          - name: booking_status
+            tests:
+              - accepted_values:
+                  values: ['confirmed', 'cancelled', 'completed', 'pending']
+
+      - name: raw_reviews
+        description: "Raw reviews loaded via Snowpipe"
+        columns:
+          - name: review_id
+            tests: [not_null, unique]
+          - name: rating
+            tests: [not_null]
+
+      - name: raw_hosts
+        description: "Raw hosts loaded via Snowpipe"
+        columns:
+          - name: host_id
+            tests: [not_null, unique]

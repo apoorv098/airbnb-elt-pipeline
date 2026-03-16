@@ -1,0 +1,156 @@
+version: 2
+
+models:
+  - name: stg_listings
+    description: "Cleaned and typed listings from Bronze layer"
+    columns:
+      - name: listing_id
+        description: "Primary key for listings"
+        tests:
+          - not_null
+          - unique
+      - name: host_id
+        description: "Foreign key to hosts"
+        tests:
+          - not_null
+      - name: price_usd
+        description: "Nightly price in USD"
+        tests:
+          - not_null
+      - name: room_type
+        description: "Type of room offered"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Entire home', 'Private room', 'Shared room']
+      - name: rating
+        description: "Overall listing rating"
+        tests:
+          - not_null
+      - name: city
+        description: "City where listing is located"
+        tests:
+          - not_null
+      - name: ingestion_date
+        description: "Date data was ingested from S3"
+        tests:
+          - not_null
+
+  - name: stg_bookings
+    description: "Cleaned and typed bookings from Bronze layer"
+    columns:
+      - name: booking_id
+        description: "Primary key for bookings"
+        tests:
+          - not_null
+          - unique
+      - name: listing_id
+        description: "Foreign key to listings"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_listings')
+              field: listing_id
+      - name: host_id
+        description: "Foreign key to hosts"
+        tests:
+          - not_null
+      - name: booking_status
+        description: "Current status of booking"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['confirmed', 'cancelled', 'completed', 'pending']
+      - name: total_price_usd
+        description: "Total booking amount in USD"
+        tests:
+          - not_null
+      - name: check_in
+        description: "Check-in date"
+        tests:
+          - not_null
+      - name: check_out
+        description: "Check-out date"
+        tests:
+          - not_null
+
+  - name: stg_reviews
+    description: "Cleaned and typed reviews from Bronze layer"
+    columns:
+      - name: review_id
+        description: "Primary key for reviews"
+        tests:
+          - not_null
+          - unique
+      - name: listing_id
+        description: "Foreign key to listings"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_listings')
+              field: listing_id
+      - name: rating
+        description: "Overall review rating 1-5"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 4, 5]
+      - name: cleanliness
+        description: "Cleanliness sub-rating 1-5"
+        tests:
+          - not_null
+      - name: communication
+        description: "Communication sub-rating 1-5"
+        tests:
+          - not_null
+
+  - name: stg_hosts
+    description: "Cleaned and typed hosts from Bronze layer"
+    columns:
+      - name: host_id
+        description: "Primary key for hosts"
+        tests:
+          - not_null
+          - unique
+      - name: host_name
+        description: "Full name of host"
+        tests:
+          - not_null
+      - name: is_superhost
+        description: "Whether host has superhost status"
+        tests:
+          - not_null
+      - name: response_rate
+        description: "Host response rate percentage"
+        tests:
+          - not_null
+
+  - name: int_bookings_enriched
+    description: "Bookings enriched with listing and host details"
+    columns:
+      - name: booking_id
+        description: "Primary key"
+        tests:
+          - not_null
+          - unique
+      - name: listing_id
+        tests:
+          - not_null
+      - name: host_id
+        tests:
+          - not_null
+      - name: total_price_usd
+        tests:
+          - not_null
+
+  - name: int_listings_with_metrics
+    description: "Listings enriched with booking and review metrics"
+    columns:
+      - name: listing_id
+        description: "Primary key"
+        tests:
+          - not_null
+          - unique
+      - name: city
+        tests:
+          - not_null

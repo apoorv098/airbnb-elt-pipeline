@@ -1,0 +1,34 @@
+name: airbnb_dbt
+version: '1.0.0'
+config-version: 2
+
+profile: airbnb_dbt
+
+model-paths: ["models"]
+snapshot-paths: ["snapshots"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  airbnb_dbt:
+    staging:
+      +materialized: view
+      +schema: AIRBNB
+      +database: SILVER
+    intermediate:
+      +materialized: incremental
+      +schema: AIRBNB
+      +database: SILVER
+    marts:
+      +materialized: table
+      +schema: AIRBNB
+      +database: GOLD
+
+snapshots:
+  airbnb_dbt:
+    +target_schema: AIRBNB
+    +target_database: SILVER
