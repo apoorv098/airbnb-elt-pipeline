@@ -4,3 +4,9 @@ logs/
 profiles.yml
 *.pyc
 .env
+airflow/logs/
+airflow/.astro/
+airflow/dags/__pycache__/
+airflow/dags/airbnb_dbt/target/
+airflow/dags/airbnb_dbt/dbt_packages/
+airflow/dags/airbnb_dbt/logs/
