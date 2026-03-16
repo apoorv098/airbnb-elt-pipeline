@@ -2,29 +2,23 @@
 
 A production-grade ELT pipeline built on AWS, Snowflake, DBT, and Apache Airflow. Ingests raw Airbnb-style transaction data from S3, auto-loads via Snowpipe, transforms through a Medallion architecture (Bronze → Silver → Gold), and orchestrates daily runs with Airflow — all protected by a GitHub Actions CI/CD quality gate.
 
----
-
 ## Architecture
+```mermaid
+flowchart LR
+    S3[(AWS S3)] -->|event| SQS[AWS SQS]
+    SQS -->|AUTO_INGEST| Snowpipe[Snowpipe]
+    Snowpipe --> Bronze[(Bronze)]
+    Bronze -->|dbt run| Silver[(Silver)]
+    Silver -->|dbt run| Gold[(Gold)]
+    Gold --> PBI[Power BI]
+    Airflow[Airflow DAG] -.->|orchestrates| Bronze
+    GHA[GitHub Actions] -.->|CI/CD gate| Gold
 
-```
-S3 (raw CSVs)
-    ↓ S3 event notification
-SQS Queue
-    ↓ AUTO_INGEST
-Snowpipe → Bronze (raw layer)
-    ↓ dbt run
-Silver (cleaned + typed)
-    ↓ dbt run
-Gold (analytics-ready marts)
-    ↓ dbt test
-58 automated quality tests
-    ↓ Airflow DAG
-Orchestrated daily pipeline
-    ↓ GitHub Actions
-CI/CD quality gate on every PR
+    style Bronze fill:#92400e,color:#fff
+    style Silver fill:#1e3a5f,color:#fff
+    style Gold fill:#064e3b,color:#fff
 ```
 
----
 
 ## Tech Stack
 
